@@ -6,10 +6,12 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/nitishsharma2825/social/internal/repository"
 )
 
 type application struct {
-	config config
+	config  config
+	storage repository.Storage
 }
 
 type config struct {

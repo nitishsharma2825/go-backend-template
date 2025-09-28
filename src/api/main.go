@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/nitishsharma2825/social/internal"
+	"github.com/nitishsharma2825/social/internal/repository"
 )
 
 func main() {
@@ -17,8 +18,11 @@ func main() {
 		addr: settings.Addr,
 	}
 
+	storage := repository.NewPostgresStorage(nil)
+
 	app := &application{
-		config: cfg,
+		config:  cfg,
+		storage: storage,
 	}
 
 	mux := app.mount()
