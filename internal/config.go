@@ -1,13 +1,30 @@
 package internal
 
 import (
+	"fmt"
 	"os"
 
 	"gopkg.in/yaml.v3"
 )
 
 type Settings struct {
-	Addr string `yaml:"port"`
+	Addr     string           `yaml:"port"`
+	Database DatabaseSettings `yaml:"database"`
+}
+
+type DatabaseSettings struct {
+	Host     string `yaml:"host"`
+	Port     int16  `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	DbName   string `yaml:"database_name"`
+}
+
+func (ds *DatabaseSettings) GetConnectionString() string {
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		ds.Username, ds.Password, ds.Host, ds.Port, ds.DbName,
+	)
 }
 
 func GetConfig() (*Settings, error) {
