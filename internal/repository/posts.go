@@ -4,18 +4,17 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 // Model for Post
 type Post struct {
-	ID        int64    `json:"id"`
-	Content   string   `json:"content"`
-	Title     string   `json:"title"`
-	UserID    int64    `json:"user_id"`
-	Tags      []string `json:"tags"`
-	CreatedAt string   `json:"created_at"`
-	UpdatedAt string   `json:"updated_at"`
+	ID        int64  `json:"id"`
+	Title     string `json:"title"`
+	UserID    int64  `json:"user_id"`
+	Content   string `json:"content"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 // Repository interface for talking to posts
@@ -30,16 +29,15 @@ type PostgresPostsRepository struct {
 
 func (s *PostgresPostsRepository) Create(ctx context.Context, post *Post) error {
 	query := `
-		INSERT INTO posts (content, title, user_id, tags, created_at, updated_at)
+		INSERT INTO posts (title, user_id, content, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id, created_at, updated_at
 		`
 	err := s.db.QueryRowContext(
 		ctx,
 		query,
-		post.Content,
 		post.Title,
 		post.UserID,
-		pq.Array(post.Tags),
+		post.Content,
 	).Scan(
 		&post.ID,
 		&post.CreatedAt,
